@@ -23,7 +23,7 @@ git clone https://github.com/react-chile/workshop-redux.git
 
 - Abrir la carpeta clonada en Visual Studio Code o en su editor favorito
 
-## App de Finalización del Workshop
+## App de Base para trabajar
 
 - Instalar API
 
