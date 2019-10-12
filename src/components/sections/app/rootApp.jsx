@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+import { Provider } from 'react-redux';
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
+
+import store from '../../../store/store';
 
 import style from './rootApp.module.css';
 import Menu from '../../common/menu/Menu';
@@ -46,22 +49,26 @@ class App extends Component {
         // console.log(this.props);
 
         return (
-            <div className={style.container}>
-                <BrowserRouter>
-                    <Menu data={dataMenu} currentTime={this.state.time}/>
-                        <div className={`container ${style.borderBlue} ` }>
-                            <Switch>
-                                <Route exact path='/' component={Home} />
-                                <Route exact path='/orders' component={Orders} />
-                                <Route path='/orders/:number' component={OrdersDetail} />
+            <>
+                <Provider store={store}>
+                    <div className={style.container}>
+                        <BrowserRouter>
+                            <Menu data={dataMenu} currentTime={this.state.time}/>
+                                <div className={`container ${style.borderBlue} ` }>
+                                    <Switch>
+                                        <Route exact path='/' component={Home} />
+                                        <Route exact path='/orders' component={Orders} />
+                                        <Route path='/orders/:number' component={OrdersDetail} />
 
-                                <Route exact path='/services' component={Services} />
-                                <Route exact path='/services/:number' component={ServicesDetail} />
-                                <Route path="*" component={NoMatch} /> 
-                            </Switch>
-                        </div>
-                </BrowserRouter>
-            </div>
+                                        <Route exact path='/services' component={Services} />
+                                        <Route exact path='/services/:number' component={ServicesDetail} />
+                                        <Route path="*" component={NoMatch} /> 
+                                    </Switch>
+                                </div>
+                        </BrowserRouter>
+                    </div>
+                </Provider>
+            </>
         );
 
     }

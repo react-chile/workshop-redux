@@ -1,5 +1,13 @@
 import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 import _ from 'lodash';
+import { css } from '@emotion/core';
+import PacmanLoader from 'react-spinners/PacmanLoader';
+
+import { 
+  loadingStart,
+  loadingFinished
+} from '../../../store/loading/actions';
 
 import Breadcrumb from '../../common/breadcrumb/Breadcrumb';
 import WelcomeBox from '../../common/welcomeBox/WelcomeBox';
@@ -10,7 +18,27 @@ import CardEvents from '../../common/cardEvents/CardEvents';
 const dataBreadcrumb = [
     { 'name': 'Dashboard', 'url': '/', 'isSelected':true, },
   ];
-  
+
+const override = css`
+  display: block;
+  margin: 0 auto;
+  border-color: red;
+  position: fixed;
+
+    z-index: 1;
+    background: #ECF0F3;
+    left: 0px;
+    top: 0px;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:all .3s ease;
+    opacity: 0.8;
+
+`;
+
 class Home extends Component {
   state = {
     dataRows: [],
@@ -99,12 +127,36 @@ class Home extends Component {
     return body;
   };
 
+  actionInit= () => {
+    const { loadingStart } = this.props;
+    loadingStart({module:'HOME'});
+  };
+  actionFinish= () => {
+    const { loadingFinished } = this.props;
+    loadingFinished({module:'HOME'});
+  };
+ 
   render() {
     const {dataColumns, dataRows, totalOrders, totalServices} = this.state;
+    const { loading } = this.props;
 // console.log(this.state)
     return (
         <Fragment>
-        {/* <code>{JSON.stringify(this.state)}</code> */}
+        <code style={{zIndex: '1000'}}>{JSON.stringify(loading)}</code>
+        <a style={{zIndex: '1000'}} className={`button is-link `} onClick={this.actionInit}>Iniciar</a> <span> </span>
+        <a style={{zIndex: '1000'}} className={`button is-link `} onClick={this.actionFinish}>Finalizar</a>
+        
+        {/* { loading.fetching ?
+        <PacmanLoader
+          css={override}
+          sizeUnit={"px"}
+          size={150}
+          color={'red'}
+          loading={this.state.loading}
+        />
+        :null
+        } */}
+
         <div className="columns">
           <div className="column is-12">
             
@@ -154,4 +206,20 @@ class Home extends Component {
   }
 }
 
-export default Home;
+// export default Home;
+const mapStateToProps = state => {
+  return {
+      loading: state.loading
+  }
+};
+
+export const mapDispatchToProps = (dispatch) => ({
+  loadingStart: (payload) => dispatch(loadingStart( payload )),
+  loadingFinished: (payload) => dispatch(loadingFinished( payload )),
+  
+
+});
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(Home) ;

@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import Breadcrumb from '../../common/breadcrumb/Breadcrumb';
 import style from './OrdersDetail.module.css';
@@ -26,7 +26,7 @@ class OrdersDetail extends Component {
      Descripción: props.location.hasOwnProperty('query')? props.location.query.Descripción : '',
      Servicio: props.location.hasOwnProperty('query')? props.location.query.Servicio : '',
      Ingresado: props.location.hasOwnProperty('query')? props.location.query.Ingresado : '',
-     routeReturn: props.location.hasOwnProperty('query')? props.location.query.routeReturn : '',
+     routeReturn: props.location.hasOwnProperty('query')? props.location.query.routeReturn : '/orders',
     }
   };
 
@@ -70,18 +70,18 @@ callApi = async () => {
   }
 
   render() {
-    const { location:{ query } }= this.props;
-    const { Id, Nombre, Descripción,Servicio,Ingresado, routeReturn } = {...query};
+    // const { location:{ query } }= this.props;
+    // const { Id, Nombre, Descripción,Servicio,Ingresado, routeReturn } = {...query};
     
     // Solución a problema de falta de data 
-    // const {Id, Nombre, Descripción,Servicio,Ingresado, routeReturn} = this.state;
+    const {Id, Nombre, Descripción,Servicio,Ingresado, routeReturn} = this.state;
 
     return (
       <Fragment>
-        {/* 
-        <code>state: {JSON.stringify(this.state.nombre)}</code>
-        <code>Existe: {this.state.isLoaded.toString()}</code> 
-        */}
+        
+        {/* <code>state: {JSON.stringify(this.state)}</code>
+        <code>Existe: {this.state.isLoaded.toString()}</code>  */}
+        
         <Breadcrumb data={dataBreadcrumb}/>
           <section className="hero is-dark">
             <div className="hero-body">
@@ -128,11 +128,11 @@ callApi = async () => {
               
               
               <br/><br/>
-              {/* <Link  
+              <Link  
                 to={routeReturn}
                 className={`button is-primary ${style.button}`} 
                 >Volver
-              </Link> */}
+              </Link>
               {
                 this.state.isEdit ? 
                   <a className={`button is-link ${style.button}`} onClick={this.changeStatus}>Salir</a>
