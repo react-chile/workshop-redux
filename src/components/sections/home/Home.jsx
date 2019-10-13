@@ -146,7 +146,7 @@ class Home extends Component {
         <a style={{zIndex: '1000'}} className={`button is-link `} onClick={this.actionInit}>Iniciar</a> <span> </span>
         <a style={{zIndex: '1000'}} className={`button is-link `} onClick={this.actionFinish}>Finalizar</a>
         
-        {/* { loading.fetching ?
+        { loading.fetching ?
         <PacmanLoader
           css={override}
           sizeUnit={"px"}
@@ -155,7 +155,7 @@ class Home extends Component {
           loading={this.state.loading}
         />
         :null
-        } */}
+        }
 
         <div className="columns">
           <div className="column is-12">

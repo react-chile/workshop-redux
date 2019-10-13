@@ -1,5 +1,11 @@
 import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 import _ from 'lodash';
+import {ordersGet} from '../../../store/orders/actions';
+
+import { css } from '@emotion/core';
+import PacmanLoader from 'react-spinners/PacmanLoader';
+
 
 import Breadcrumb from '../../common/breadcrumb/Breadcrumb';
 import WelcomeBox from '../../common/welcomeBox/WelcomeBox';
@@ -11,53 +17,53 @@ const dataBreadcrumb = [
 ];
 
 
+const override = css`
+  display: block;
+  margin: 0 auto;
+  border-color: red;
+  position: fixed;
+
+    z-index: 1000;
+    background: #ECF0F3;
+    left: 0%;
+    
+    top: 0px;
+    height: 100%;
+    width: 100%;
+   
+    transition:all .3s ease;
+    opacity: 0.8;
+
+`;
+
 
 class Orders extends Component {
   state = {
     dataRows: [],
-    dataColumns: [],
+    dataColumns: ['Id', 'Nombre', 'Descripción', 'Servicio','Ingresado','button'],
     totalRecords: 0,
   };
 
   componentDidMount() {
-    this.callApi()
-      .then(res => {
-        const count= _.countBy(res,{});
 
-        const rows= res.map((item)=>{
-          return { 
-            Id: item.clientId,
-            Nombre: item.clientName,
-            Descripción: item.descrip,
-            Servicio: item.servicesName,
-            Ingresado: item.usersName,
-            button: 'button'
-          }
-        });
-        const columns = ['Id', 'Nombre', 'Descripción', 'Servicio','Ingresado','button']
-
-        this.setState({ 
-          dataRows: rows, 
-          dataColumns: columns, 
-          totalRecords: count.true 
-        });
-
-      })
-      .then(res => console.log(res))
-      .catch(err => console.log(err));
+    const {ordersGet} = this.props;
+    ordersGet();
   }
-  callApi = async () => {
-    const response = await fetch('/api/orders/');
-    const body = await response.json();
-    if (response.status !== 200) throw Error(body.message);
-    return body;
-  };
-
 
   render() {
     const {dataColumns, dataRows, totalRecords, routeReturn} = this.state;
+    const {loading, orders: {list} } = this.props;
+
     return (
       <Fragment>
+        <code>{JSON.stringify(list)}</code>
+         <PacmanLoader
+          css={override}
+          sizeUnit={"px"}
+          size={150}
+          color={'red'}
+          loading={loading.fetching}
+        />
         <div className="columns">
           <div className="column is-12">
             
@@ -74,7 +80,7 @@ class Orders extends Component {
                   <CardEvents totalRecords={totalRecords}>
                       <Table 
                         dataColumns={dataColumns} 
-                        dataRows={dataRows}
+                        dataRows={list}
                         routeReturn={'/orders'}  
                       />
                   </CardEvents>
@@ -92,4 +98,22 @@ class Orders extends Component {
   }
 }
 
-export default Orders;
+
+const mapStateToProps = state => {
+  return {
+      loading: state.loading,
+      orders: state.orders
+  }
+};
+
+export const mapDispatchToProps = (dispatch) => ({
+  ordersGet: (payload) => dispatch(ordersGet( payload )),
+  // loadingFinished: (payload) => dispatch(loadingFinished( payload )),
+  
+
+});
+// export default Orders;
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(Orders) ;
